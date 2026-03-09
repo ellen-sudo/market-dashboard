@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Harmony Realty | Triangle Market Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --black:#1a1a1a;--white:#fff;--green:#3a6b47;--green-light:#5a8f68;
+  --green-pale:#e8f0ea;--gold:#c8a96e;--gray:#f5f5f3;--gray-mid:#888;
+  --border:#ddd;--up:#3a6b47;--down:#c0392b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--white);color:var(--black);max-width:1100px;margin:0 auto;padding:0 20px 60px;}
+.header{text-align:center;padding:48px 20px 32px;border-bottom:2px solid var(--black);margin-bottom:40px;}
+.eyebrow{font-weight:700;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+.header h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:700;line-height:1.1;margin-bottom:12px;}
+.header-meta{font-size:14px;color:var(--gray-mid);font-weight:300;letter-spacing:1px;}
+.header-meta span{color:var(--green);font-weight:700;}
+.config-bar{background:var(--gray);border:1px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;}
+.config-bar label{font-weight:700;white-space:nowrap;}
+.config-bar input[type=text]{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:'Lato',sans-serif;}
+.btn-green{background:var(--green);color:white;border:none;padding:9px 18px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;}
+.btn-green:hover{background:var(--green-light);}
+.btn-white{background:white;color:var(--black);border:1px solid var(--border);padding:9px 18px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;}
+#fileInput{display:none;}
+.status-msg{font-size:12px;color:var(--green);font-weight:700;width:100%;}
+.status-msg.error{color:var(--down);}
+details{margin-bottom:28px;font-size:13px;color:var(--gray-mid);border:1px solid var(--border);border-radius:6px;padding:12px 16px;}
+details summary{cursor:pointer;font-weight:700;color:var(--black);}
+details ol{margin-top:12px;padding-left:20px;line-height:2.4;}
+#welcome{text-align:center;padding:60px 20px;color:var(--gray-mid);}
+.w-icon{font-size:48px;margin-bottom:16px;}
+.w-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--black);margin-bottom:12px;}
+.w-sub{font-size:15px;line-height:1.7;max-width:480px;margin:0 auto;}
+#dashboard{display:none;}
+.report-period{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
+.period-label{font-family:'Playfair Display',serif;font-size:22px;}
+.source-badge{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-mid);background:var(--gray);padding:5px 12px;border-radius:20px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:16px;margin-bottom:40px;}
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px 18px;position:relative;overflow:hidden;}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);}
+.kpi-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;}
+.kpi-value{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1;margin-bottom:6px;}
+.kpi-delta{font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.kpi-delta.up{color:var(--up);}.kpi-delta.down{color:var(--down);}.kpi-delta.neutral{color:var(--gray-mid);}
+.kpi-delta-lbl{font-weight:400;color:var(--gray-mid);font-size:11px;}
+.qt-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;}
+@media(max-width:600px){.qt-row{grid-template-columns:1fr;}}
+.qt-card{border-radius:8px;padding:22px 24px;}
+.qt-card.buyers{background:var(--green-pale);border-left:4px solid var(--green);}
+.qt-card.sellers{background:#fef9f0;border-left:4px solid var(--gold);}
+.qt-hdr{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.qt-card.buyers .qt-hdr{color:var(--green);}.qt-card.sellers .qt-hdr{color:#b8860b;}
+.qt-verdict{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:6px;}
+.qt-sub{font-size:13px;color:var(--gray-mid);line-height:1.5;}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px;}
+@media(max-width:680px){.charts-grid{grid-template-columns:1fr;}}
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px;}
+.chart-title{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:18px;}
+.chart-wrap{position:relative;height:220px;}
+.sec-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:6px;}
+.sec-rule{border:none;border-top:2px solid var(--black);margin-bottom:28px;}
+.sec{margin-bottom:40px;}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.tab-btn{background:none;border:none;padding:12px 24px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--gray-mid);border-bottom:3px solid transparent;margin-bottom:-1px;}
+.tab-btn.active{color:var(--black);border-bottom-color:var(--green);}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.analysis-text{font-size:16px;line-height:1.85;color:#333;}
+.analysis-text p{margin-bottom:18px;}
+.ana-loading{display:flex;align-items:center;gap:14px;color:var(--gray-mid);font-size:14px;padding:20px 0;}
+.spinner{width:24px;height:24px;border:2px solid var(--green-pale);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.intel-box{background:var(--black);color:var(--white);border-radius:8px;padding:32px 36px;margin-bottom:40px;position:relative;overflow:hidden;}
+.intel-box::before{content:'\201C';position:absolute;top:-10px;left:20px;font-family:'Playfair Display',serif;font-size:120px;color:rgba(255,255,255,0.06);line-height:1;}
+.intel-eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.intel-text{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.88);font-style:italic;}
+.intel-author{margin-top:20px;font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:1px;}
+.yoy-wrap{overflow-x:auto;margin-bottom:40px;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+thead tr{border-bottom:2px solid var(--black);}
+th{text-align:left;padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);}
+th:not(:first-child){text-align:right;}
+td{padding:12px 14px;border-bottom:1px solid var(--border);}
+td:not(:first-child){text-align:right;}
+tr:last-child td{border-bottom:none;}
+.td-lbl{font-weight:700;}
+.chg-up{color:var(--up);font-weight:700;}.chg-down{color:var(--down);font-weight:700;}
+tbody tr:hover{background:var(--gray);}
+.footer{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--gray-mid);line-height:1.6;}
+.footer-brand{font-weight:700;color:var(--black);font-size:14px;font-family:'Playfair Display',serif;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Harmony Realty · Triangle Market Intelligence</div>
+  <h1>Triangle Area<br>Real Estate Report</h1>
+  <div class="header-meta" id="headerMeta">Connect your data below to generate this month's report</div>
+</div>
+
+<div class="config-bar">
+  <label>📊 Google Sheet CSV URL:</label>
+  <input type="text" id="sheetUrl" placeholder="Paste your published Google Sheet CSV link here…"/>
+  <button class="btn-green" onclick="loadFromSheet()">Load Data</button>
+  <span style="color:var(--gray-mid);font-size:12px;">— or —</span>
+  <button class="btn-white" onclick="document.getElementById('fileInput').click()">📁 Upload Excel / CSV</button>
+  <input type="file" id="fileInput" accept=".xlsx,.csv" onchange="loadFromFile(event)"/>
+  <div class="status-msg" id="statusMsg"></div>
+</div>
+
+<details>
+  <summary>📋 How to connect your Google Sheet (one-time setup)</summary>
+  <ol>
+    <li>Open your Google Sheet</li>
+    <li>Click <strong>File → Share → Publish to web</strong></li>
+    <li>Left dropdown: <strong>"Form Responses 1"</strong></li>
+    <li>Right dropdown: <strong>"Comma-separated values (.csv)"</strong></li>
+    <li>Click <strong>Publish</strong> and copy the URL</li>
+    <li>Paste above and click <strong>Load Data</strong> — from now on the dashboard updates automatically when you submit your form ✅</li>
+  </ol>
+</details>
+
+<div id="welcome">
+  <div class="w-icon">🏡</div>
+  <div class="w-title">Your Market Dashboard Awaits</div>
+  <div class="w-sub">Connect your Google Sheet or upload your Excel file above. Charts, analysis, and field intelligence appear instantly.</div>
+</div>
+
+<div id="dashboard">
+  <div class="report-period">
+    <div class="period-label" id="periodLabel">—</div>
+    <div class="source-badge" id="sourceBadge">—</div>
+  </div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+  <div class="qt-row" id="qtRow"></div>
+  <div class="charts-grid">
+    <div class="chart-card"><div class="chart-title">Listings, Pendings &amp; Closed Sales</div><div class="chart-wrap"><canvas id="cVol"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">Days on Market · YoY</div><div class="chart-wrap"><canvas id="cDom"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">% of List Price Received</div><div class="chart-wrap"><canvas id="cLp"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">Sales Above List Price</div><div class="chart-wrap"><canvas id="cAl"></canvas></div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-title">Year-Over-Year Comparison</div>
+    <hr class="sec-rule"/>
+    <div class="yoy-wrap" id="yoyTable"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-title">Market Analysis</div>
+    <hr class="sec-rule"/>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('buyers',this)">For Buyers</button>
+      <button class="tab-btn" onclick="switchTab('sellers',this)">For Sellers</button>
+      <button class="tab-btn" onclick="switchTab('overview',this)">Market Overview</button>
+    </div>
+    <div class="tab-pane active" id="tab-buyers">
+      <div class="ana-loading" id="ld-buyers"><div class="spinner"></div>Generating buyer analysis…</div>
+      <div class="analysis-text" id="an-buyers"></div>
+    </div>
+    <div class="tab-pane" id="tab-sellers">
+      <div class="ana-loading" id="ld-sellers"><div class="spinner"></div>Generating seller analysis…</div>
+      <div class="analysis-text" id="an-sellers"></div>
+    </div>
+    <div class="tab-pane" id="tab-overview">
+      <div class="ana-loading" id="ld-overview"><div class="spinner"></div>Generating overview…</div>
+      <div class="analysis-text" id="an-overview"></div>
+    </div>
+  </div>
+  <div class="intel-box" id="intelBox" style="display:none">
+    <div class="intel-eyebrow">📍 Field Intelligence · From the Ground</div>
+    <div class="intel-text" id="intelText"></div>
+    <div class="intel-author">— Ellen Pitts, Harmony Realty</div>
+  </div>
+  <div class="footer">
+    <div>
+      <div class="footer-brand">Harmony Realty</div>
+      <div>919-725-1885 · ellen@harmonyrealtytriangle.com</div>
+      <div>4700 Homewood Ct Suite 200, Raleigh, NC 27609</div>
+    </div>
+    <div style="max-width:600px;">Data sourced from <span id="footerSrc">MLS</span>. For informational purposes only. Contact Harmony Realty for personalized guidance.</div>
+  </div>
+</div>
+
+<script>
+// ── COLUMN NAME KEYWORDS ─────────────────────────────────────────────────
+// These match partial header text from your Google Form columns
+const COLS = {
+  timestamp:  ['Timestamp'],
+  region:     ['Region'],
+  intel:      ['Field label','Field Intelligence','intelligence'],
+  nlTY:       ['New Listings','This year'],
+  npTY:       ['New Pendings','This Year'],
+  domTY:      ['Median Days','This Year'],
+  csTY:       ['Closed Sales','This Year'],
+  expTY:      ['Expired','This Year'],
+  lpTY:       ['% of List Price','This Year','Average %'],
+  alTY:       ['Above List','This Year','Percentage of Closed','This Year'],
+  source:     ['Source of Data','Source'],
+  nlLY:       ['New Listings','Last year'],
+  npLY:       ['New Pendings','Last Year'],
+  domLY:      ['Median Days','Last Year'],
+  csLY:       ['Closed Sales','Last Year'],
+  expLY:      ['Expired','Last Year'],
+  lpLY:       ['% of List Price','Last Year','Average %'],
+  alLY:       ['Above List','Last Year','Percentage of Closed','Last Year'],
+  period:     ['Data Period','period'],
+  u10:        ['Under Contract','10 days','less than 10']
+};
+
+// Find a value in a row object by matching header keywords
+function findVal(row, keywords) {
+  // Try multi-keyword match first (all keywords must appear in header)
+  const key = Object.keys(row).find(h =>
+    keywords.every(kw => h.toLowerCase().includes(kw.toLowerCase()))
+  );
+  if (key !== undefined) return row[key];
+  // Fall back: first keyword only
+  const key2 = Object.keys(row).find(h =>
+    h.toLowerCase().includes(keywords[0].toLowerCase())
+  );
+  return key2 !== undefined ? row[key2] : null;
+}
+
+// Special case: TY vs LY share similar column names — need to differentiate
+function findTY(row, baseKw) {
+  // Must contain base keyword AND "This Year" or "This year"
+  const key = Object.keys(row).find(h =>
+    h.toLowerCase().includes(baseKw.toLowerCase()) &&
+    (h.includes('This Year') || h.includes('This year'))
+  );
+  return key !== undefined ? row[key] : null;
+}
+function findLY(row, baseKw) {
+  const key = Object.keys(row).find(h =>
+    h.toLowerCase().includes(baseKw.toLowerCase()) &&
+    (h.includes('Last Year') || h.includes('Last year'))
+  );
+  return key !== undefined ? row[key] : null;
+}
+
+// ── NUMBER PARSERS ───────────────────────────────────────────────────────
+function toInt(v) {
+  if (v === null || v === undefined || v === '') return null;
+  let n = parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+  return isNaN(n) ? null : Math.round(n);
+}
+function toListPct(v) {
+  // Handles 98.3, 98.30%, 0.983
+  if (v === null || v === undefined || v === '') return null;
+  let n = parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+  if (isNaN(n)) return null;
+  if (n > 0 && n <= 2) return Math.round(n * 1000) / 10; // 0.983→98.3
+  return Math.round(n * 10) / 10;
+}
+function toAbovePct(v) {
+  // Handles 11.3, 0.113, 35
+  if (v === null || v === undefined || v === '') return null;
+  let n = parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+  if (isNaN(n)) return null;
+  if (n > 0 && n < 1) return Math.round(n * 1000) / 10; // 0.113→11.3
+  return Math.round(n * 10) / 10;
+}
+function pctChg(curr, prior) {
+  if (curr === null || !prior) return null;
+  return Math.round(((curr - prior) / prior) * 1000) / 10;
+}
+function fmtDate(v) {
+  if (!v) return '—';
+  let d = new Date(v);
+  if (isNaN(d)) return String(v);
+  return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+}
+function deltaClass(chg, invertGood) {
+  if (chg === null) return 'neutral';
+  let pos = chg >= 0; if (invertGood) pos = !pos;
+  return pos ? 'up' : 'down';
+}
+
+// ── CSV PARSER ───────────────────────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = splitLine(lines[0]);
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const vals = splitLine(line);
+    let obj = {};
+    headers.forEach((h, i) => { obj[h.trim()] = (vals[i]||'').trim(); });
+    return obj;
+  });
+}
+function splitLine(line) {
+  const res=[]; let cur='', inQ=false;
+  for (let ch of line) {
+    if (ch==='"'){inQ=!inQ;}
+    else if (ch===','&&!inQ){res.push(cur);cur='';}
+    else{cur+=ch;}
+  }
+  res.push(cur); return res;
+}
+
+// ── PICK BEST ROW ────────────────────────────────────────────────────────
+// Score each row by how many key numeric fields have valid data
+// This avoids picking the "testing" row or incomplete rows
+function getBestRow(rows) {
+  function score(row) {
+    let s = 0;
+    const checks = [
+      findTY(row,'New Listings'), findTY(row,'New Pendings'),
+      findTY(row,'Median Days'), findTY(row,'Closed Sales'),
+      findLY(row,'New Listings'), findLY(row,'Closed Sales'),
+    ];
+    checks.forEach(v => { if (v && !isNaN(parseFloat(v)) && parseFloat(v) > 0) s++; });
+    // Bonus: has field intel
+    const intel = findVal(row, ['Field label']);
+    if (intel && intel.length > 50) s += 2;
+    return s;
+  }
+  return [...rows].sort((a,b) => score(b) - score(a))[0];
+}
+
+// ── RENDER DASHBOARD ─────────────────────────────────────────────────────
+function renderDashboard(rows) {
+  const r = getBestRow(rows);
+
+  // Extract all values by column name
+  const region = (findVal(r,['Region']) || 'Wake County').trim();
+  const intel  = (findVal(r,['Field label']) || '').trim();
+  const nlTY   = toInt(findTY(r,'New Listings'));
+  const npTY   = toInt(findTY(r,'New Pendings'));
+  const domTY  = toInt(findTY(r,'Median Days'));
+  const csTY   = toInt(findTY(r,'Closed Sales'));
+  const expTY  = toInt(findTY(r,'Expired'));
+  const lpTY   = toListPct(findTY(r,'Average %'));
+  const alTY   = toAbovePct(findTY(r,'Percentage of Closed'));
+  const source = (findVal(r,['Source of Data']) || 'MLS Report').trim();
+  const nlLY   = toInt(findLY(r,'New Listings'));
+  const npLY   = toInt(findLY(r,'New Pendings'));
+  const domLY  = toInt(findLY(r,'Median Days'));
+  const csLY   = toInt(findLY(r,'Closed Sales'));
+  const expLY  = toInt(findLY(r,'Expired'));
+  const lpLY   = toListPct(findLY(r,'Average %'));
+  const alLY   = toAbovePct(findLY(r,'Percentage of Closed'));
+  const period = findVal(r,['Data Period']) || '';
+  const u10    = toInt(findVal(r,['Under Contract'])||findVal(r,['less than 10']));
+
+  // Header
+  document.getElementById('headerMeta').innerHTML = `<span>${region}</span> &nbsp;·&nbsp; ${fmtDate(period)}`;
+  document.getElementById('periodLabel').textContent = `${fmtDate(period)} · ${region}`;
+  document.getElementById('sourceBadge').textContent = `Data: ${source}`;
+  document.getElementById('footerSrc').textContent = source;
+
+  // KPI cards
+  function kpi(label, val, prior, fmt, inv) {
+    const chg = pctChg(val, prior);
+    const cls = deltaClass(chg, inv);
+    const arrow = chg===null?'':(chg>=0?'▲':'▼');
+    return `<div class="kpi-card">
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-value">${val!==null?fmt(val):'—'}</div>
+      ${chg!==null?`<div class="kpi-delta ${cls}">${arrow} ${Math.abs(chg)}%<span class="kpi-delta-lbl"> vs last year</span></div>`:'<div class="kpi-delta neutral">—</div>'}
+    </div>`;
+  }
+  document.getElementById('kpiGrid').innerHTML =
+    kpi('New Listings',          nlTY,  nlLY,  v=>v.toLocaleString(), false)+
+    kpi('New Pendings',          npTY,  npLY,  v=>v.toLocaleString(), false)+
+    kpi('Closed Sales',          csTY,  csLY,  v=>v.toLocaleString(), false)+
+    kpi('Median Days on Market', domTY, domLY, v=>`${v}`,             true) +
+    kpi('Expired Listings',      expTY, expLY, v=>v.toLocaleString(), true) +
+    kpi('% of List Received',    lpTY,  lpLY,  v=>`${v}%`,           false)+
+    kpi('Sold Above List',       alTY,  alLY,  v=>`${v}%`,           false)+
+    (u10?kpi('Closed < 10 Days', u10,   null,  v=>v.toLocaleString(), false):'');
+
+  // Quick-take
+  const buyerLbl = domTY<15?"Hot Seller's Market":domTY<25?'Competitive Market':domTY<40?'Balanced Conditions':"Buyer-Friendly Market";
+  const sellerLbl = alTY>25?"Strong Seller's Market":alTY>12?'Moderate Seller Advantage':'Balanced Market';
+  document.getElementById('qtRow').innerHTML = `
+    <div class="qt-card buyers">
+      <div class="qt-hdr">👤 For Buyers</div>
+      <div class="qt-verdict">${buyerLbl}</div>
+      <div class="qt-sub">Homes averaging ${domTY} days on market. ${domTY<25?'Move decisively — well-priced homes go fast.':'More time to evaluate your options carefully.'}</div>
+    </div>
+    <div class="qt-card sellers">
+      <div class="qt-hdr">🏷️ For Sellers</div>
+      <div class="qt-verdict">${sellerLbl}</div>
+      <div class="qt-sub">Sellers netting ${lpTY}% of list price. ${lpTY>=99?'Price firmly — the market supports it.':'Smart pricing and presentation are critical.'}</div>
+    </div>`;
+
+  // Charts
+  renderCharts({nlTY,nlLY,npTY,npLY,csTY,csLY,domTY,domLY,lpTY,lpLY,alTY,alLY});
+
+  // YoY table
+  function tRow(lbl, ty, ly, fmt, inv) {
+    if (ty===null&&ly===null) return '';
+    const chg=pctChg(ty,ly), cls=deltaClass(chg,inv);
+    const arrow=chg!==null?(chg>=0?'▲':'▼'):'';
+    return `<tr><td class="td-lbl">${lbl}</td><td>${ty!==null?fmt(ty):'—'}</td><td>${ly!==null?fmt(ly):'—'}</td><td class="${chg!==null?(cls==='up'?'chg-up':'chg-down'):''}">${chg!==null?`${arrow} ${Math.abs(chg)}%`:'—'}</td></tr>`;
+  }
+  document.getElementById('yoyTable').innerHTML = `<table>
+    <thead><tr><th>Metric</th><th>This Year</th><th>Last Year</th><th>Change</th></tr></thead>
+    <tbody>
+      ${tRow('New Listings',           nlTY,  nlLY,  v=>v.toLocaleString(), false)}
+      ${tRow('New Pendings',           npTY,  npLY,  v=>v.toLocaleString(), false)}
+      ${tRow('Closed Sales',           csTY,  csLY,  v=>v.toLocaleString(), false)}
+      ${tRow('Expired Listings',       expTY, expLY, v=>v.toLocaleString(), true)}
+      ${tRow('Median Days on Market',  domTY, domLY, v=>`${v} days`,        true)}
+      ${tRow('Avg % of List Received', lpTY,  lpLY,  v=>`${v}%`,           false)}
+      ${tRow('Sales Above List Price', alTY,  alLY,  v=>`${v}%`,           false)}
+    </tbody></table>`;
+
+  // Field intel
+  if (intel) {
+    document.getElementById('intelText').textContent = intel;
+    document.getElementById('intelBox').style.display = 'block';
+  }
+
+  // Analysis
+  const d = {region,period:fmtDate(period),nlTY,nlLY,npTY,npLY,csTY,csLY,domTY,domLY,expTY,expLY,lpTY,lpLY,alTY,alLY,u10,intel};
+  generateAnalysis(d);
+
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// ── CHARTS ───────────────────────────────────────────────────────────────
+let charts = {};
+function killChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function baseOpts(yExtra){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{family:'Lato',size:12},color:'#555'}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{family:'Lato',size:11},color:'#666'}},
+      y:{grid:{color:'#f0f0f0'},ticks:{font:{family:'Lato',size:11},color:'#666'},...yExtra}
+    }
+  };
+}
+function renderCharts(d){
+  ['vol','dom','lp','al'].forEach(killChart);
+  charts['vol']=new Chart(document.getElementById('cVol'),{
+    type:'bar',
+    data:{labels:['New Listings','Pendings','Closed Sales'],
+      datasets:[
+        {label:'This Year',data:[d.nlTY,d.npTY,d.csTY],backgroundColor:'#3a6b47',borderRadius:4},
+        {label:'Last Year',data:[d.nlLY,d.npLY,d.csLY],backgroundColor:'#ccc',borderRadius:4}
+      ]},
+    options:baseOpts({})
+  });
+  charts['dom']=new Chart(document.getElementById('cDom'),{
+    type:'bar',
+    data:{labels:['This Year','Last Year'],
+      datasets:[{label:'Median Days on Market',data:[d.domTY,d.domLY],backgroundColor:['#3a6b47','#ccc'],borderRadius:6}]},
+    options:{...baseOpts({}),plugins:{legend:{display:false}}}
+  });
+  const lpMin=d.lpTY&&d.lpLY?Math.min(d.lpTY,d.lpLY)-2:95;
+  charts['lp']=new Chart(document.getElementById('cLp'),{
+    type:'bar',
+    data:{labels:['This Year','Last Year'],
+      datasets:[{label:'% of List Price',data:[d.lpTY,d.lpLY],backgroundColor:['#3a6b47','#ccc'],borderRadius:6}]},
+    options:{...baseOpts({min:lpMin,ticks:{callback:v=>v+'%',font:{family:'Lato',size:11},color:'#666'}}),plugins:{legend:{display:false}}}
+  });
+  charts['al']=new Chart(document.getElementById('cAl'),{
+    type:'bar',
+    data:{labels:['This Year','Last Year'],
+      datasets:[{label:'% Above List',data:[d.alTY,d.alLY],backgroundColor:['#c8a96e','#ccc'],borderRadius:6}]},
+    options:{...baseOpts({ticks:{callback:v=>v+'%',font:{family:'Lato',size:11},color:'#666'}}),plugins:{legend:{display:false}}}
+  });
+}
+
+// ── ANALYSIS ─────────────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-pane').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+async function generateAnalysis(d) {
+  ['buyers','sellers','overview'].forEach(t=>{
+    document.getElementById('ld-'+t).style.display='flex';
+    document.getElementById('an-'+t).innerHTML='';
+  });
+
+  const data = `Region: ${d.region} | Period: ${d.period}
+New Listings: ${d.nlTY} (last year: ${d.nlLY}) | New Pendings: ${d.npTY} (last year: ${d.npLY})
+Closed Sales: ${d.csTY} (last year: ${d.csLY}) | Expired Listings: ${d.expTY} (last year: ${d.expLY})
+Median Days on Market: ${d.domTY} days (last year: ${d.domLY})
+Avg % of List Price Received: ${d.lpTY}% (last year: ${d.lpLY}%)
+Sales Above List Price: ${d.alTY}% (last year: ${d.alLY}%)
+Homes under contract in less than 10 days: ${d.u10}
+Agent Field Intelligence: ${d.intel||'Not provided'}`;
+
+  const prompts = {
+    buyers:`You are writing for the Harmony Realty newsletter serving the Triangle, NC area (Raleigh/Wake County). Write a warm, honest, compelling 3-paragraph analysis FOR HOME BUYERS. Weave the agent's field intelligence naturally — let it make your writing vivid and specific. Be direct, empathetic, no generic advice. Format as 3 HTML <p> tags only, no headers.\n${data}`,
+    sellers:`You are writing for the Harmony Realty newsletter serving the Triangle, NC area (Raleigh/Wake County). Write a warm, honest, compelling 3-paragraph analysis FOR HOME SELLERS. Weave the agent's field intelligence naturally. Be direct about what's working and what isn't. Format as 3 HTML <p> tags only, no headers.\n${data}`,
+    overview:`You are writing for the Harmony Realty newsletter serving the Triangle, NC area (Raleigh/Wake County). Write a 3-paragraph market overview of the overall residential real estate market. Weave the agent's field intelligence naturally. Be insightful and data-driven. Format as 3 HTML <p> tags only, no headers.\n${data}`
+  };
+
+  for (const tab of ['buyers','sellers','overview']) {
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:1000,
+          messages:[{role:'user',content:prompts[tab]}]
+        })
+      });
+      const json = await res.json();
+      const text = (json.content||[]).map(b=>b.text||'').join('');
+      document.getElementById('ld-'+tab).style.display='none';
+      document.getElementById('an-'+tab).innerHTML = text||fallback(tab,d);
+    } catch(e) {
+      document.getElementById('ld-'+tab).style.display='none';
+      document.getElementById('an-'+tab).innerHTML = fallback(tab,d);
+    }
+  }
+}
+
+function fallback(tab, d) {
+  const domDir = d.domTY < d.domLY ? `down from ${d.domLY} days last year — the market has tightened` : `up from ${d.domLY} days last year, giving buyers more time to evaluate`;
+  const lpDir = d.lpTY >= d.lpLY ? 'holding steady' : 'shifting slightly';
+  if (tab==='buyers') return `
+    <p>The ${d.region} market in ${d.period} shows homes spending a median of <strong>${d.domTY} days</strong> on market — ${domDir}. With <strong>${d.nlTY} new listings</strong> coming to market and <strong>${d.npTY}</strong> going under contract, ${d.npTY > d.nlTY*0.75 ? 'demand remains strong relative to supply — desirable homes are not sitting long' : 'there is more inventory to choose from than in recent months'}.</p>
+    <p>${d.u10 ? `Notably, <strong>${d.u10} homes</strong> went under contract in less than 10 days — a clear signal that well-priced, move-in ready properties still attract immediate competition. ` : ''}Sellers are netting an average of <strong>${d.lpTY}%</strong> of their list price, and <strong>${d.alTY}%</strong> of homes are closing above asking. ${d.lpTY>=99 ? 'This means there is little room to negotiate on homes that are priced and presented well.' : 'There is some room for negotiation on homes that have been sitting.'}</p>
+    <p>${d.intel ? `What the numbers don't fully capture: buyers today are discerning. They want move-in ready homes with no major red flags. When a home checks all the boxes and is priced right, competition appears quickly. A single significant flaw — a drainage issue, deferred maintenance, an awkward layout — can change a home's entire market position. Come prepared, but don't let urgency push you past your comfort zone.` : `Focus your search on homes that are priced fairly and show well — these are generating the most activity. Reach out to Harmony Realty to discuss your specific search criteria and budget.`}</p>`;
+  if (tab==='sellers') return `
+    <p>Sellers in ${d.region} are averaging <strong>${d.lpTY}%</strong> of list price at closing — ${lpDir} from ${d.lpLY}% last year. With <strong>${d.alTY}%</strong> of homes still closing above list price, the market continues to reward sellers who price strategically and present their homes impeccably. This is not the market to cut corners on preparation.</p>
+    <p>The median days on market of <strong>${d.domTY} days</strong> — ${d.domTY < d.domLY ? `faster than last year's ${d.domLY} days` : `slightly longer than last year's ${d.domLY} days`} — tells us that the market is separating well-prepared homes from poorly prepared ones. With <strong>${d.expTY} expired listings</strong> in the period compared to ${d.expLY} last year, overpriced or underprepared homes are clearly paying a price.</p>
+    <p>${d.intel ? `The ground-level reality is unambiguous: buyers are older and more discerning. They don't want projects. A beautifully presented home in Cary priced at $800k went multiple offers its first weekend — not because it was extraordinary, but because it was convenient, priced well, and had no red flags. One significant flaw can change everything. Invest in preparation before you list.` : `The bottom line: preparation and pricing are everything right now. Homes that are clean, updated, and priced to the market are still attracting serious buyers quickly. Contact Harmony Realty for a personalized pricing strategy for your home.`}</p>`;
+  return `
+    <p>The ${d.region} residential market in ${d.period} reflects a market that rewards quality and punishes missteps. With <strong>${d.nlTY} new listings</strong> (vs. ${d.nlLY} last year) and <strong>${d.npTY} new pendings</strong>, activity remains healthy. Closed sales of <strong>${d.csTY} homes</strong> compared to ${d.csLY} last year reflect continued buyer engagement even as market conditions have evolved.</p>
+    <p>The median days on market of <strong>${d.domTY} days</strong> — compared to ${d.domLY} a year ago — is one of the most telling indicators in this report. ${d.domTY < d.domLY ? 'The market has tightened, and well-priced homes are moving faster. This benefits decisive sellers but requires buyers to act with confidence.' : 'Homes are taking slightly longer to sell on average, which puts a premium on seller preparation and accurate pricing.'} Meanwhile, <strong>${d.alTY}%</strong> of homes are still closing above list price, demonstrating that competition for desirable properties persists.</p>
+    <p>${d.intel ? `What stands out most from the field: the market is bifurcating sharply. Homes that are presented well and priced right — with no significant flaws — are still generating multiple offers and strong prices. Homes with issues, even beautiful homes, are sitting. The <strong>${d.expTY} expired listings</strong> in this period tell that story clearly. For both buyers and sellers, the most important thing to understand right now is that condition and pricing have never mattered more.` : `The overall picture is one of a resilient, discerning market. For both buyers and sellers, working with a knowledgeable local advisor has never been more valuable. Contact Harmony Realty at 919-725-1885.`}</p>`;
+}
+
+// ── LOAD FROM GOOGLE SHEET ───────────────────────────────────────────────
+async function loadFromSheet() {
+  const url = document.getElementById('sheetUrl').value.trim();
+  if (!url) { alert('Please paste your Google Sheet CSV URL first.'); return; }
+  setStatus('Loading…', false);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Could not fetch. Make sure the sheet is published as CSV.');
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if (!rows.length) throw new Error('No data rows found.');
+    setStatus(`✓ Loaded ${rows.length} record(s) from Google Sheets`, false);
+    renderDashboard(rows);
+  } catch(e) {
+    setStatus('❌ '+e.message, true);
+  }
+}
+
+// ── LOAD FROM FILE ───────────────────────────────────────────────────────
+function loadFromFile(event) {
+  const file = event.target.files[0]; if (!file) return;
+  setStatus('Reading file…', false);
+  if (file.name.endsWith('.csv')) {
+    const r = new FileReader();
+    r.onload = e => { const rows=parseCSV(e.target.result); setStatus(`✓ Loaded ${rows.length} record(s)`,false); renderDashboard(rows); };
+    r.readAsText(file);
+  } else {
+    if (window.XLSX){readXLSX(file);return;}
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload=()=>readXLSX(file);
+    document.head.appendChild(s);
+  }
+}
+function readXLSX(file) {
+  const r=new FileReader();
+  r.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array'});
+    const raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});
+    const headers=raw[0];
+    const rows=raw.slice(1).filter(r=>r.length).map(r=>{
+      let obj={};
+      headers.forEach((h,i)=>{obj[h]=r[i]!==undefined?String(r[i]):'';});
+      return obj;
+    });
+    setStatus(`✓ Loaded ${rows.length} record(s)`,false);
+    renderDashboard(rows);
+  };
+  r.readAsArrayBuffer(file);
+}
+
+function setStatus(msg, isError) {
+  const el=document.getElementById('statusMsg');
+  el.textContent=msg;
+  el.className='status-msg'+(isError?' error':'');
+}
+</script>
+</body>
+</html>
