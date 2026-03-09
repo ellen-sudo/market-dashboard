@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Harmony Realty | Wake County Market Report · February 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--black:#1a1a1a;--white:#fff;--green:#3a6b47;--gl:#5a8f68;--gp:#e8f0ea;--gold:#c8a96e;--gray:#f5f5f3;--gm:#888;--border:#ddd;--up:#3a6b47;--down:#c0392b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--white);color:var(--black);max-width:1100px;margin:0 auto;padding:0 20px 60px;}
+.hdr{text-align:center;padding:48px 20px 32px;border-bottom:2px solid var(--black);margin-bottom:40px;}
+.eyebrow{font-weight:700;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:12px;}
+.hdr h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:700;line-height:1.1;margin-bottom:12px;}
+.hdr-meta{font-size:14px;color:var(--gm);font-weight:300;letter-spacing:1px;}
+.hdr-meta span{color:var(--green);font-weight:700;}
+.rp{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px;}
+.rpl{font-family:'Playfair Display',serif;font-size:22px;}
+.sbadge{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gm);background:var(--gray);padding:5px 12px;border-radius:20px;}
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:16px;margin-bottom:40px;}
+.kc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px 18px;position:relative;overflow:hidden;}
+.kc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);}
+.kl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gm);margin-bottom:8px;}
+.kv{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1;margin-bottom:6px;}
+.kd{font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.kd.up{color:var(--up);}.kd.down{color:var(--down);}.kd.neu{color:var(--gm);}
+.kdl{font-weight:400;color:var(--gm);font-size:11px;}
+.qr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;}
+@media(max-width:600px){.qr{grid-template-columns:1fr;}}
+.qc{border-radius:8px;padding:22px 24px;}
+.qc.b{background:var(--gp);border-left:4px solid var(--green);}
+.qc.s{background:#fef9f0;border-left:4px solid var(--gold);}
+.qh{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.qc.b .qh{color:var(--green);}.qc.s .qh{color:#b8860b;}
+.qv{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:6px;}
+.qs{font-size:13px;color:var(--gm);line-height:1.5;}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px;}
+@media(max-width:680px){.cg{grid-template-columns:1fr;}}
+.cc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:24px;}
+.ct{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:18px;}
+.cw{position:relative;height:220px;}
+.st{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:6px;}
+.sr{border:none;border-top:2px solid var(--black);margin-bottom:28px;}
+.sec{margin-bottom:40px;}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.tb{background:none;border:none;padding:12px 24px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--gm);border-bottom:3px solid transparent;margin-bottom:-1px;}
+.tb.active{color:var(--black);border-bottom-color:var(--green);}
+.tp{display:none;}.tp.active{display:block;}
+.at{font-size:16px;line-height:1.85;color:#333;}
+.at p{margin-bottom:18px;}
+.ib{background:var(--black);color:#fff;border-radius:8px;padding:32px 36px;margin-bottom:40px;position:relative;overflow:hidden;}
+.ib::before{content:'\201C';position:absolute;top:-10px;left:20px;font-family:'Playfair Display',serif;font-size:120px;color:rgba(255,255,255,0.06);line-height:1;}
+.ie{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.it{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.88);font-style:italic;}
+.ia{margin-top:20px;font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:1px;}
+.yw{overflow-x:auto;margin-bottom:40px;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+thead tr{border-bottom:2px solid var(--black);}
+th{text-align:left;padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gm);}
+th:not(:first-child){text-align:right;}
+td{padding:12px 14px;border-bottom:1px solid var(--border);}
+td:not(:first-child){text-align:right;}
+tr:last-child td{border-bottom:none;}
+.tl{font-weight:700;}
+.cu{color:var(--up);font-weight:700;}.cd{color:var(--down);font-weight:700;}
+tbody tr:hover{background:var(--gray);}
+.ft{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--gm);line-height:1.6;}
+.fb{font-weight:700;color:var(--black);font-size:14px;font-family:'Playfair Display',serif;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="eyebrow">Harmony Realty · Triangle Market Intelligence</div>
+  <h1>Triangle Area<br>Real Estate Report</h1>
+  <div class="hdr-meta"><span>Wake County</span> &nbsp;·&nbsp; February 2026</div>
+</div>
+
+<div class="rp">
+  <div class="rpl">February 2026 · Wake County</div>
+  <div class="sbadge">Data: Doorify MLS</div>
+</div>
+
+<!-- KPI CARDS -->
+<div class="kg">
+
+  <div class="kc">
+    <div class="kl">New Listings</div>
+    <div class="kv">1,745</div>
+    <div class="kd up">▲ 4.1%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">New Pendings</div>
+    <div class="kv">1,359</div>
+    <div class="kd up">▲ 13.7%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">Closed Sales</div>
+    <div class="kv">1,017</div>
+    <div class="kd down">▼ 3.4%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">Median Days on Market</div>
+    <div class="kv">47</div>
+    <div class="kd down">▲ 67.9%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">Expired Listings</div>
+    <div class="kv">326</div>
+    <div class="kd down">▲ 63%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">% of List Received</div>
+    <div class="kv">98.3%</div>
+    <div class="kd down">▼ 0.6%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">Sold Above List</div>
+    <div class="kv">11.3%</div>
+    <div class="kd down">▼ 29.4%<span class="kdl"> vs last year</span></div>
+  </div>
+
+  <div class="kc">
+    <div class="kl">Closed &lt; 10 Days</div>
+    <div class="kv">517</div>
+    <div class="kd neu">—</div>
+  </div>
+
+</div>
+
+<!-- QUICK TAKE -->
+<div class="qr">
+  <div class="qc b">
+    <div class="qh">👤 For Buyers</div>
+    <div class="qv">Balanced Conditions</div>
+    <div class="qs">Homes averaging 47 days on market — up from 28 last year. More time to evaluate, but well-priced homes still move fast.</div>
+  </div>
+  <div class="qc s">
+    <div class="qh">🏷️ For Sellers</div>
+    <div class="qv">Moderate Seller Advantage</div>
+    <div class="qs">Sellers netting 98.3% of list price. Preparation and accurate pricing are now more critical than ever.</div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="cg">
+  <div class="cc"><div class="ct">Listings, Pendings &amp; Closed Sales</div><div class="cw"><canvas id="cVol"></canvas></div></div>
+  <div class="cc"><div class="ct">Days on Market · YoY</div><div class="cw"><canvas id="cDom"></canvas></div></div>
+  <div class="cc"><div class="ct">% of List Price Received</div><div class="cw"><canvas id="cLp"></canvas></div></div>
+  <div class="cc"><div class="ct">Sales Above List Price</div><div class="cw"><canvas id="cAl"></canvas></div></div>
+</div>
+
+<!-- YOY TABLE -->
+<div class="sec">
+  <div class="st">Year-Over-Year Comparison</div>
+  <hr class="sr"/>
+  <div class="yw">
+    <table>
+      <thead><tr><th>Metric</th><th>This Year</th><th>Last Year</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td class="tl">New Listings</td><td>1,745</td><td>1,676</td><td class="cu">▲ 4.1%</td></tr>
+        <tr><td class="tl">New Pendings</td><td>1,359</td><td>1,195</td><td class="cu">▲ 13.7%</td></tr>
+        <tr><td class="tl">Closed Sales</td><td>1,017</td><td>1,053</td><td class="cd">▼ 3.4%</td></tr>
+        <tr><td class="tl">Expired Listings</td><td>326</td><td>200</td><td class="cd">▲ 63%</td></tr>
+        <tr><td class="tl">Median Days on Market</td><td>47 days</td><td>28 days</td><td class="cd">▲ 67.9%</td></tr>
+        <tr><td class="tl">Avg % of List Received</td><td>98.3%</td><td>98.9%</td><td class="cd">▼ 0.6%</td></tr>
+        <tr><td class="tl">Sales Above List Price</td><td>11.3%</td><td>16%</td><td class="cd">▼ 29.4%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ANALYSIS -->
+<div class="sec">
+  <div class="st">Market Analysis</div>
+  <hr class="sr"/>
+  <div class="tabs">
+    <button class="tb active" onclick="switchTab('b',this)">For Buyers</button>
+    <button class="tb" onclick="switchTab('s',this)">For Sellers</button>
+    <button class="tb" onclick="switchTab('o',this)">Market Overview</button>
+  </div>
+
+  <div class="tp active" id="tp-b">
+    <div class="at">
+      <p>The Wake County market in February 2026 is giving buyers something they haven't had in a while: time. Median days on market climbed to <strong>47 days</strong>, up from just 28 days last year — a significant shift that means you have more room to evaluate your options carefully before committing. With <strong>1,745 new listings</strong> coming to market and pendings rising to <strong>1,359</strong>, there is healthy inventory to work with. This is not a market where you need to panic-buy, but it is also not one where you can be passive about the right home.</p>
+      <p>Here's what the data doesn't fully capture: the market is bifurcating sharply. While the average home is sitting longer, well-priced and well-presented homes are still generating immediate competition. A modest home in the $800k range in Cary went multiple offers its first weekend — not because it was extraordinary, but because it was convenient, priced right, and had no red flags. Meanwhile, a beautiful home with a significant drainage issue sat untouched despite being priced well. Buyers today are experienced and discerning. They want move-in ready. One meaningful flaw can change a home's entire market position — which is actually good news for buyers who do their homework.</p>
+      <p>The practical takeaway: use the extra time the market is giving you wisely. Inspect carefully, ask questions about anything that concerns you, and don't let a beautiful kitchen distract you from a problematic yard. Sellers are still receiving <strong>98.3%</strong> of list price on solid homes, so there's limited room to negotiate on properties without issues. On homes that have been sitting, there's more room to work. Contact Harmony Realty — we know which homes fall into which category before you ever set foot inside.</p>
+    </div>
+  </div>
+
+  <div class="tp" id="tp-s">
+    <div class="at">
+      <p>The Wake County market in February 2026 is sending sellers a clear message: the days of every home selling quickly regardless of condition are over. Median days on market has risen to <strong>47 days</strong> from 28 days last year — nearly double — and expired listings have jumped from <strong>200 to 326</strong>. Those expired listings are not bad luck. They are the predictable result of overpricing, under-preparation, or a significant flaw that buyers in this market simply are not willing to overlook. The sellers who are winning right now are the ones who understand this.</p>
+      <p>What's striking from the ground level is how binary the outcomes are. A modest, well-presented home in the $800k range in Cary went multiple offers its first weekend — not because it was special, but because it was clean, priced accurately, and had no red flags. A beautiful home with a drainage issue and wet yard sat, despite being priced well. Buyers today are older, more experienced, and unwilling to take on problems. They don't want projects. They are not going to overlook a sump pump running constantly or drainage easements across the backyard, no matter how beautiful the kitchen is. One flaw can cost you weeks on market and a significant price reduction.</p>
+      <p>The opportunity is still real — sellers are averaging <strong>98.3%</strong> of list price and <strong>11.3%</strong> of homes are still closing above asking. But those outcomes belong to sellers who prepare properly and price honestly from day one. Overpriced homes are being ignored, not negotiated on. If you're thinking about selling, contact Harmony Realty before you do anything else. We'll tell you exactly what your home is worth in this market and what, if anything, needs to be addressed before you list.</p>
+    </div>
+  </div>
+
+  <div class="tp" id="tp-o">
+    <div class="at">
+      <p>The Wake County residential real estate market in February 2026 is undergoing a meaningful shift — and the headline numbers only tell part of the story. Median days on market rose to <strong>47 days</strong> from 28 days last year, a 68% increase that signals buyers are taking more time and being more selective. New listings increased modestly to <strong>1,745</strong> from 1,676, while new pendings jumped to <strong>1,359</strong> from 1,195 — a seemingly contradictory combination that reveals a market sorting itself: more buyers are active, but they are concentrating their attention on a narrower slice of inventory.</p>
+      <p>The numbers that demand attention are expired listings and homes going under contract in under 10 days — sitting side by side in the same market. Expired listings climbed from <strong>200 to 326</strong> year over year. At the same time, <strong>517 homes</strong> went under contract in less than 10 days. These are not two different markets — they are the same market, where condition and pricing determine everything. A home with a significant flaw, even a beautiful and well-priced one, is being passed over entirely. A clean, well-presented home with no red flags is still generating competition. The gap between those two outcomes has never been wider in recent memory.</p>
+      <p>Sellers are averaging <strong>98.3%</strong> of list price at closing — down slightly from 98.9% last year — and <strong>11.3%</strong> of homes are still closing above asking, compared to 16% the prior year. These are not alarming numbers, but they reflect a market that is normalizing after years of extreme seller conditions. For buyers, this is a window of opportunity to be more thoughtful and deliberate than was possible 18 months ago. For sellers, it is a wake-up call that preparation and honest pricing are no longer optional. The Triangle market remains healthy and active — but it is rewarding professionalism and punishing complacency.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FIELD INTEL -->
+<div class="ib">
+  <div class="ie">📍 Field Intelligence · From the Ground</div>
+  <div class="it">There can be a beautiful house, priced well with one major flaw that makes everyone walk away. This week we looked at the perfect home for our clients. They loved the home — however, the backyard had several drainage easements that made the yard challenging. There was a portion of the yard that was very wet and led to a municipal drain, and the sump pump in the home was moving a significant amount of water. It made the buyers worry about future foundation issues. One flaw in a property can change its market price. A smaller, nicely presented home in the $800k range in Cary went multiple offers on the first weekend — not because it was particularly unique or beautiful, it was just convenient, priced well, with no big red flags. The data is not capturing the idea that homes are selling very quickly if they are presented and priced well. Buyers right now are older. They don't want to do work when they move in. 50% of new-to-market homes in February went under contract in less than 10 days. If homes have work to be done, buyers simply aren't biting.</div>
+  <div class="ia">— Ellen Pitts, Harmony Realty</div>
+</div>
+
+<!-- FOOTER -->
+<div class="ft">
+  <div>
+    <div class="fb">Harmony Realty</div>
+    <div>919-725-1885 · ellen@harmonyrealtytriangle.com</div>
+    <div>4700 Homewood Ct Suite 200, Raleigh, NC 27609</div>
+  </div>
+  <div style="max-width:600px;">Data sourced from Doorify MLS. For informational purposes only. Market conditions change rapidly — contact Harmony Realty for personalized guidance.</div>
+</div>
+
+<script>
+function switchTab(t,btn){
+  document.querySelectorAll('.tp').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(e=>e.classList.remove('active'));
+  document.getElementById('tp-'+t).classList.add('active');
+  btn.classList.add('active');
+}
+
+const G='#3a6b47', GR='#ccc', GD='#c8a96e';
+function bo(yEx){
+  return{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{family:'Lato',size:12},color:'#555'}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{family:'Lato',size:11},color:'#666'}},
+      y:{grid:{color:'#f0f0f0'},ticks:{font:{family:'Lato',size:11},color:'#666'},...yEx}
+    }};
+}
+
+new Chart(document.getElementById('cVol'),{
+  type:'bar',
+  data:{
+    labels:['New Listings','Pendings','Closed Sales'],
+    datasets:[
+      {label:'This Year (2026)',data:[1745,1359,1017],backgroundColor:G,borderRadius:4},
+      {label:'Last Year (2025)',data:[1676,1195,1053],backgroundColor:GR,borderRadius:4}
+    ]
+  },
+  options:bo({})
+});
+
+new Chart(document.getElementById('cDom'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[{label:'Median Days on Market',data:[47,28],backgroundColor:[G,GR],borderRadius:6}]
+  },
+  options:{...bo({}),plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('cLp'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[{label:'% of List Price',data:[98.3,98.9],backgroundColor:[G,GR],borderRadius:6}]
+  },
+  options:{...bo({min:97.5,ticks:{callback:v=>v+'%',font:{family:'Lato',size:11},color:'#666'}}),plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('cAl'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[{label:'% Above List',data:[11.3,16.0],backgroundColor:[GD,GR],borderRadius:6}]
+  },
+  options:{...bo({ticks:{callback:v=>v+'%',font:{family:'Lato',size:11},color:'#666'}}),plugins:{legend:{display:false}}}
+});
+</script>
+</body>
+</html>
