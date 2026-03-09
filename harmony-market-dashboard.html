@@ -175,4 +175,96 @@ tbody tr:hover{background:var(--gray);}
 
   <div class="tp active" id="tp-b">
     <div class="at">
-      <p>The Wake County market in February 2026 is giving buyers something they haven't had in a while: time
+      <p>The Wake County market in February 2026 is giving buyers something they haven't had in a while: time. With the median days on market now sitting at 47 days — up a significant 67.9% from just 28 days a year ago — buyers have a genuine opportunity to be thoughtful and deliberate in their search process without feeling forced into snap decisions.</p>
+      <p>New listings climbed 4.1% year-over-year to 1,745, expanding the pool of available inventory and giving buyers more selection across price points and neighborhoods. The sharp rise in expired listings — up 63% to 326 — signals that overpriced homes are sitting and ultimately failing to sell, which means buyers have real negotiating leverage when a property has been on the market for a while.</p>
+      <p>That said, the 13.7% surge in new pendings to 1,359 is a clear indicator that demand remains strong. Well-priced, well-prepared homes are still attracting buyers quickly. If you find a home that checks your boxes and is priced correctly, expect competition. The window of opportunity is widest for properties that have been on the market 30 days or more.</p>
+      <p>With only 11.3% of homes closing above list price — down nearly 30% from last year — the days of routinely waiving inspections and offering tens of thousands over ask are fading. Buyers can now negotiate repairs, request closing cost contributions, and include reasonable contingencies on a much larger share of transactions than was possible in 2024 or early 2025.</p>
+    </div>
+  </div>
+
+  <div class="tp" id="tp-s">
+    <div class="at">
+      <p>February 2026 presents a market where preparation and pricing discipline are the defining factors between a successful sale and a listing that expires. With 326 expired listings — up 63% from last year — the data makes clear that sellers who overprice are paying a steep price in time, carrying costs, and ultimately sale price.</p>
+      <p>The good news: sellers who price accurately and present their homes well are still achieving strong results. The average seller is netting 98.3% of list price, and new pendings jumped 13.7% year-over-year, reflecting genuine buyer demand in the market. When a home is priced right, buyers are showing up.</p>
+      <p>The shift in days on market — from 28 to 47 days — means sellers need to recalibrate their expectations around timeline. Homes are not flying off the market the way they did a year ago, and that requires patience and a solid marketing strategy. Professional photography, staging, and targeted digital exposure are no longer optional — they are the baseline for competing in this environment.</p>
+      <p>With just 11.3% of homes selling above list price (down from 16% last year), the era of automatic bidding wars is largely behind us for most price points. Work closely with your agent to set a price that reflects current comparable sales, not the peak of 2024. A well-executed launch at the right price will always outperform a high-priced listing that sits and requires reductions.</p>
+    </div>
+  </div>
+
+  <div class="tp" id="tp-o">
+    <div class="at">
+      <p>Wake County's February 2026 market reflects a continued normalization from the hyper-competitive conditions that defined 2023 and early 2024. Key indicators point to a market that is rebalancing — not collapsing — with demand remaining solid but buyers exercising more selectivity and patience than in prior years.</p>
+      <p>New listings rose 4.1% to 1,745, providing a modest but meaningful expansion in available inventory. New pendings surged 13.7% to 1,359, suggesting that buyer demand is healthy and that activity is picking up as spring approaches. Closed sales of 1,017 came in 3.4% below last year's 1,053, reflecting a slight lag in transactions closing but not a fundamental pullback in market activity.</p>
+      <p>The most telling data points are days on market and expired listings. The median days on market climbed from 28 to 47 — a 67.9% increase — indicating that buyers are taking more time and sellers must work harder to stand out. The 63% rise in expired listings to 326 underscores the cost of misaligned pricing strategies in this environment.</p>
+      <p>The percentage of list price received slipped modestly from 98.9% to 98.3%, and the share of homes selling above list dropped from 16% to 11.3%. These figures collectively paint a picture of a market that still favors sellers with well-prepared, accurately priced homes, while increasingly punishing listings that enter the market at aspirational prices. Overall, Wake County remains one of the stronger residential markets in the Southeast, supported by steady population growth, a diverse employment base, and continued long-term housing demand.</p>
+    </div>
+  </div>
+</div>
+
+<div class="ft">
+  <div>
+    <div class="fb">Harmony Realty</div>
+    <div>Wake County · February 2026 · Data: Doorify MLS</div>
+    <div>Report generated for client distribution. All data sourced from MLS records.</div>
+  </div>
+  <div style="text-align:right;">
+    <div>© 2026 Harmony Realty</div>
+    <div>Triangle Market Intelligence</div>
+  </div>
+</div>
+
+<script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tp').forEach(function(el){el.classList.remove('active');});
+  document.querySelectorAll('.tb').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('tp-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function bo(){
+  return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Lato',size:11},boxWidth:12,padding:16}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Lato',size:11}}},y:{grid:{color:'#f0f0f0'},ticks:{font:{family:'Lato',size:11}}}}};
+}
+new Chart(document.getElementById('cVol'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[
+      {label:'New Listings',data:[1745,1676],backgroundColor:'#3a6b47'},
+      {label:'New Pendings',data:[1359,1195],backgroundColor:'#5a8f68'},
+      {label:'Closed Sales',data:[1017,1053],backgroundColor:'#c8a96e'}
+    ]
+  },
+  options:bo()
+});
+new Chart(document.getElementById('cDom'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[
+      {label:'Median Days on Market',data:[47,28],backgroundColor:['#3a6b47','#c8a96e']}
+    ]
+  },
+  options:bo()
+});
+new Chart(document.getElementById('cLp'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[
+      {label:'% of List Price Received',data:[98.3,98.9],backgroundColor:['#3a6b47','#c8a96e']}
+    ]
+  },
+  options:(function(){var o=bo();o.scales.y.min=97;o.scales.y.max=100;return o;})()
+});
+new Chart(document.getElementById('cAl'),{
+  type:'bar',
+  data:{
+    labels:['This Year','Last Year'],
+    datasets:[
+      {label:'% Closed Above List',data:[11.3,16],backgroundColor:['#3a6b47','#c8a96e']}
+    ]
+  },
+  options:bo()
+});
+</script>
+</body>
+</html>
